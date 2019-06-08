@@ -136,6 +136,7 @@ func Login(m models.AuthModel) (*models.User, error) {
 	if authMode == "" || dao.IsSuperUser(m.Principal) {
 		authMode = common.DBAuth
 	}
+	log.Error("Current ticket is ", m.Ticket)
 	log.Debug("Current AUTH_MODE is ", authMode)
 
 	authenticator, ok := registry[authMode]
