@@ -17,7 +17,6 @@ package controllers
 import (
 	"bytes"
 	"context"
-	"github.com/goharbor/harbor/src/core/filter"
 	"html/template"
 	"net"
 	"net/http"
@@ -25,6 +24,8 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/goharbor/harbor/src/core/filter"
 
 	"github.com/astaxie/beego"
 	"github.com/beego/i18n"
@@ -83,6 +84,7 @@ func redirectForOIDC(ctx context.Context, username string) bool {
 func (cc *CommonController) Login() {
 	principal := cc.GetString("principal")
 	password := cc.GetString("password")
+	ticket := cc.GetString("ticket")
 	if redirectForOIDC(cc.Ctx.Request.Context(), principal) {
 		ep, err := config.ExtEndpoint()
 		if err != nil {
@@ -102,6 +104,7 @@ func (cc *CommonController) Login() {
 	user, err := auth.Login(models.AuthModel{
 		Principal: principal,
 		Password:  password,
+		Ticket: ticket,
 	})
 	if err != nil {
 		log.Errorf("Error occurred in UserLogin: %v", err)
