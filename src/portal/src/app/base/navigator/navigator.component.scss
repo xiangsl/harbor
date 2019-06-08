@@ -1,3 +1,14 @@
+.header-5{
+    height: 30px;
+    .header-actions{
+        .dropdown{
+            .dropdown-toggle{
+                height:30px;
+                line-height:30px;
+            }
+        }
+    }
+}
 .sign-in-override {
     padding-left: 0px !important;
     padding-right: 5px !important;

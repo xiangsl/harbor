@@ -67,9 +67,8 @@ export class SessionService {
     // Submit signin form to backend (NOT restful service)
     signIn(signInCredential: SignInCredential): Observable<any> {
         // Build the form package
-        let queryParam: string = 'principal=' + encodeURIComponent(signInCredential.principal) +
+        let queryParam: string = 'ticket='+signInCredential.ticket+'&principal=' + encodeURIComponent(signInCredential.principal) +
             '&password=' + encodeURIComponent(signInCredential.password);
-
         // Trigger Http
         return this.http.post(signInUrl, queryParam, HTTP_FORM_OPTIONS)
             .pipe(map(() => null)

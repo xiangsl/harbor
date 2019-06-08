@@ -25,4 +25,5 @@
 export class SignInCredential {
     principal: string;
     password: string;
+    ticket: string;
 }

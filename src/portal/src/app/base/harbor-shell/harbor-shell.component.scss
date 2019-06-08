@@ -5,8 +5,11 @@
 .container-override {
     position: relative !important;
 }
-.content-container{
+:host ::ng-deep .content-container{
     position: relative;
+    .content-area{
+        padding:0px;
+    }
 }
 
 .start-content-padding {

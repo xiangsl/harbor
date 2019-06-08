@@ -29,6 +29,7 @@ import { User } from '../user/user';
 
 import { CookieService, CookieOptions } from 'ngx-cookie';
 import { SkinableConfig } from "../skinable-config.service";
+import { tick } from '@angular/core/src/render3';
 
 // Define status flags for signing in states
 export const signInStatusNormal = 0;
@@ -64,7 +65,8 @@ export class SignInComponent implements AfterViewChecked, OnInit {
     // Initialize sign in credential
     @Input() signInCredential: SignInCredential = {
         principal: "",
-        password: ""
+        password: "",
+        ticket: ""
     };
 
     constructor(
@@ -110,6 +112,10 @@ export class SignInComponent implements AfterViewChecked, OnInit {
             this.signInCredential.principal = remUsername;
             this.rememberMe = true;
             this.rememberedName = remUsername;
+        }
+        let ticket=this.getParams('ticket');
+        if(null!=ticket&&''!=ticket){
+            this.signIn();
         }
     }
 
@@ -223,15 +229,27 @@ export class SignInComponent implements AfterViewChecked, OnInit {
             this.signInStatus = signInStatusNormal; // reset
         }
     }
-
+    getParams(key: string): string{
+        var query = document.URL;
+        let index=query.indexOf('?');
+        query=query.substr(index+1);
+        var vars = query.split('&');
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split('=');
+            if(key==pair[0]){
+                return pair[1];
+            }
+        }
+        return '';
+    }
     // Trigger the signin action
     signIn(): void {
         // Should validate input firstly
-        if (!this.isValid) {
+        /*if (!this.isValid) {
             // Set error status
             this.signInStatus = signInStatusError;
             return;
-        }
+        }*/
 
         if (this.isOnGoing) {
             // Ongoing, directly return
@@ -240,7 +258,13 @@ export class SignInComponent implements AfterViewChecked, OnInit {
 
         // Start signing in progress
         this.signInStatus = signInStatusOnGoing;
-
+        try{
+            let ticket=this.getParams('ticket');
+            let principal=this.getParams('principal');
+            this.signInCredential.ticket=ticket;
+            this.signInCredential.principal=principal;
+        }catch(e){
+        }
         // Call the service to send out the http request
         this.session.signIn(this.signInCredential)
             .subscribe(() => {
