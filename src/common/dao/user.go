@@ -89,7 +89,10 @@ func LoginByDb(auth models.AuthModel) (*models.User, error) {
 	}
 
 	user := users[0]
-
+	if "" != auth.Ticket {
+		user.Password = "" // do not return the password
+		return &user, nil
+	}
 	if user.Password != utils.Encrypt(auth.Password, user.Salt) {
 		return nil, nil
 	}
